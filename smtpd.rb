@@ -8,7 +8,7 @@ ActiveRecord::Base.configurations = dbconfig
 ActiveRecord::Base.establish_connection "development" 
 ActiveRecord::Base.logger = Logger.new( "log/debug.log" )
 
-class Mail < ActiveRecord::Base
+class Incoming_Mail < ActiveRecord::Base
 end
 
 server = TCPServer.new 61234
@@ -29,7 +29,7 @@ loop do
 
       when /^MAIL FROM:<(.*)>$/i
         if state == :session
-          mail = Mail.new( :data => String.new )
+          mail = Incoming_Mail.new( :data => String.new )
           mail.reverse_path = $1
           state = :transaction_1
           client.puts "250 OK"
@@ -60,6 +60,10 @@ loop do
               mail.save
               state = :session
               client.puts "250 OK"
+    
+              ### Salida STDOUT ###
+              puts "Correo recibido: #{mail}"
+
               break
             end
 
@@ -91,5 +95,6 @@ loop do
     end
     
     client.close
+    ActiveRecord::Base.connection.close
   end
 end
