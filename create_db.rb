@@ -5,7 +5,7 @@ require "logger"
 dbconfig = YAML::load_file "database.yml" 
 ActiveRecord::Base.configurations = dbconfig
 ActiveRecord::Base.establish_connection "development" 
-ActiveRecord::Base.logger = Logger.new( "log/debug.log" )
+#ActiveRecord::Base.logger = Logger.new( "log/debug.log" )
 
 ActiveRecord::Schema.define do
   create_table :incoming_mails, :force => true do |t|

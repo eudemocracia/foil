@@ -1,8 +1,8 @@
-require "mail"
+#require "/home/matias/soil/mail/lib/mail.rb"
 load "app/models/listas.rb"
 
 loop do
-  Incoming_Mail.find_each do | mail |
+  IncomingMail.find_each do | mail |
 
     sender_mail = mail[ :reverse_path ]
     space_path, community_domain = mail[ :forward_path ].split( "@" )
@@ -10,7 +10,8 @@ loop do
     mail_data = Mail.new mail[ :data ]
 
     sender_name = mail_data[ :from ]
-    thread_title = mail_data.subject.split( "|" ).last # Si el subject es "|" esto se va a romper.
+    thread_title = mail_data.subject ? mail_data.subject.split( "|" ).last : nil
+    # Si el subject es "|" esto se va a romper.
     
     unless sender_name
       sender_name = ""

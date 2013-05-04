@@ -6,9 +6,14 @@ require "socket"
 dbconfig = YAML::load_file "database.yml" 
 ActiveRecord::Base.configurations = dbconfig
 ActiveRecord::Base.establish_connection "development" 
-ActiveRecord::Base.logger = Logger.new( "log/debug.log" )
+#ActiveRecord::Base.logger = Logger.new( "log/debug.log" )
 
-class Incoming_Mail < ActiveRecord::Base
+class IncomingMail < ActiveRecord::Base
+  after_initialize :init
+
+  def init
+    self.data ||= String.new
+  end
 end
 
 server = TCPServer.new 61234
@@ -29,7 +34,7 @@ loop do
 
       when /^MAIL FROM:<(.*)>$/i
         if state == :session
-          mail = Incoming_Mail.new( :data => String.new )
+          mail = IncomingMail.new
           mail.reverse_path = $1
           state = :transaction_1
           client.puts "250 OK"
@@ -62,7 +67,10 @@ loop do
               client.puts "250 OK"
     
               ### Salida STDOUT ###
-              puts "Correo recibido: #{mail}"
+              puts "Correo recibido!"
+              puts "De: " + mail.reverse_path
+              puts "Para: " + mail.forward_path
+              puts "----"
 
               break
             end

@@ -2,7 +2,7 @@ require "action_mailer"
 
 ActionMailer::Base.raise_delivery_errors = true
 ActionMailer::Base.smtp_settings = {
-  domain: "eudemocracia.org"
+  domain: "eudemocracia.org.ar"
 }
 
 ActionMailer::Base.view_paths = File.dirname(__FILE__)
@@ -20,26 +20,31 @@ class Mailer < ActionMailer::Base
     @content = message.content
     @headerr = message.header 
     headers(
-      "To" => space_address_with_name,
-      "Reply-To" => space_address_with_name,
-      
       "List-ID" => space_address_with_name,
       #list_help: "",
       #list_suscribe: "",
       "List-Unsuscribe" => "<mailto:#{space_address}?subject=Desuscribir>",
       #list_post: "",
       #list_owner: "",
-      "List-Archive" => "<#{message.space.web_address}>",
+      "List-Archive" => "<#{message.space.web_address}>"
     )
 
     mail(
-      return_path: "verp-" + message.space.mail_address, # VERPear!
-      sender: space_address_with_name,
+      # Ver lo de los rebotes.
+      smtp_envelope_from: space_address_with_name,
+      # Las direcciones de los destinatarios.
+      smtp_envelope_to: message.space.mailing_list(message),
+      # La dirección de la lista.
+      reply_to: space_address_with_name,
+      # La dirección para los rebotes. TODO: VERPear.
+      # return_path: "verp-" + message.space.mail_address,
+      # Sender no es necesario.
+      # sender: space_address_with_name,
+      # La dirección del remitente.
       from: "#{message.sender.name} <#{message.sender.mail}>",
-      # Pasa el mensaje al mÃ©todo mailing list para hacer una recolecciÃ³n mÃ¡s personalizada de los correos de los suscriptores.
-      # Si no se proporciona ningÃºn argumento, devuelve la lista completa.
-      to: message.space.mailing_list( message ),
-      subject: subject,
+      # La dirección de la lista.
+      to: space_address_with_name,
+      subject: subject
     )
   end
 end

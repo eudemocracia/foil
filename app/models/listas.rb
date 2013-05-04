@@ -7,9 +7,9 @@ load "mailer.rb"
 dbconfig = YAML::load_file "database.yml" 
 ActiveRecord::Base.configurations = dbconfig
 ActiveRecord::Base.establish_connection "development" 
-ActiveRecord::Base.logger = Logger.new( "log/debug.log" )
+#ActiveRecord::Base.logger = Logger.new( "log/debug.log" )
 
-class Incoming_Mail < ActiveRecord::Base
+class IncomingMail < ActiveRecord::Base
 end
 
 class Community < ActiveRecord::Base
