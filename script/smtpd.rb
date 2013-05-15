@@ -33,7 +33,7 @@ loop do
           state = :transaction_2
           client.puts "250 OK"
         elsif state == :transaction_2
-          mail.forward_path << " " + $1
+          mail.forward_path << $1
           client.puts "250 OK"
         else
           client.puts "503 Bad sequence of commands"
