@@ -1,10 +1,10 @@
 class Topic < ActiveRecord::Base
   belongs_to :space
-  belongs_to :superthread, :class_name => "Topic", :foreign_key => "superthread_id"
-  has_many   :subthreads, :class_name => "Topic", :foreign_key => "superthread_id"
-  has_many   :messages, :foreign_key => "thread_id"
-  
-  validates  :title, :presence => true
+  belongs_to :superthread, class_name: 'Topic'
+  has_many   :subthreads, class_name: 'Topic'
+  has_many   :messages
+
+  validates  :title, presence: true
 
   def self.assimilate space, thread_title
     thread = space.threads

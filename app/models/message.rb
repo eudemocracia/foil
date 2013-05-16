@@ -2,8 +2,8 @@ class Message
   include Mongoid::Document
   field :header, type: String
   field :content, type: String
-  field :hashtag, type: String
-  field :attag, type: String
+  #field :hashtag, type: String
+  #field :attag, type: String
   belongs_to :community
   belongs_to :space
   belongs_to :thread, class_name: 'Topic'
@@ -22,7 +22,7 @@ class Message
     self.sender.subscriptions.find_or_create_by(space_id: self.space.id)
   end
 
-  def send_message_to_space_suscriptors
+  def send_message_to_space_subscriptors
     Mailer.list_mail(self).deliver
   end
 end

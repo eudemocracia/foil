@@ -1,19 +1,20 @@
-class Space < ActiveRecord::Base
+class Space
+  include Mongoid::Document
   belongs_to :community
-  belongs_to :superspace, :class_name => "Space", :foreign_key => "superspace_id"
-  has_many   :subspaces, :class_name => "Space", :foreign_key => "superspace_id"
-  has_many   :threads, :class_name => "Topic"
+  belongs_to :superspace, class_name: 'Space'
+  has_many   :subspaces, class_name: 'Space'
+  has_many   :threads, :class_name: 'Topic'
   has_many   :messages
 
-  has_many   :subscriptions, :dependent => :destroy
+  has_many   :subscriptions, dependent: :destroy
 
-  validates  :path, :presence => true
+  validates  :path, presence: true
  
   def self.assimilate community, space_path
     space = community.spaces
     subspace = self
 
-    space_path.split( "." ).reverse.each do | subpath |
+    space_path.split('.').reverse.each do |subpath|
       subspace = space.find_by_path subpath
 
       if subspace == nil
@@ -50,22 +51,22 @@ class Space < ActiveRecord::Base
   end
   
   def mail_address
-    self.full_path.reverse.join( "." ) + "@" + self.immediate_community.full_domain.reverse.join( "." )
+    self.full_path.reverse.join('.') + '@' + self.immediate_community.full_domain.reverse.join('.')
   end
 
   def web_address
-    "http://" + self.immediate_community.full_domain.reverse.join( "." ) + "/" + self.full_path.join( "/" )
+    'http://' + immediate_community.full_domain.reverse.join('.') + '/' + full_path.join('/')
   end
 
-  def mailing_list( message = nil )
+  def mailing_list message = nil
     list = Array.new
 
-    self.suscriptions.find_each do | suscription |
-      list << suscription.suscriptor.mail 
+    subscriptions.each do |subscription|
+      list << suscription.subscriptor.mail 
     end
 
     # Mail echo off.
-    list.delete_if do | mail |
+    list.delete_if do |mail|
       mail == message.sender.mail
     end if message
     
