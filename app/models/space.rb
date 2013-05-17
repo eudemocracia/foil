@@ -2,6 +2,8 @@ class Space
   include Mongoid::Document
   field :name
   field :path
+  field :writable
+  filed :readable
 
   belongs_to :community
   has_many   :sent_messages, class_name: 'Message', inverse_of: :sender

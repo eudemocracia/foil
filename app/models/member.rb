@@ -1,9 +1,8 @@
 class Member
   include Mongoid::Document
   field :name
-  field :mail
+  field :email
   field :phone
-  has_many :messages
-  has_many :subscriptions, dependent: :destroy
 
+  has_and_belongs_to_many :spaces
 end
