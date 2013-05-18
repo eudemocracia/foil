@@ -10,6 +10,7 @@ gem 'haml-rails'
 
 gem 'sqlite3'
 gem 'mongoid'
+gem 'bson_ext'
 
 # Gems used only for assets and not required
 # in production environments by default.

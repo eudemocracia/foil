@@ -3,9 +3,9 @@ class Message
   include Mongoid::Timestamps::Created
   field :subject
   field :content
-  #field :original_senders
   # TODO: tags!
 
+  has_and_belongs_to_many :original_senders, class_name: 'Space', inverse_of: nil
   has_and_belongs_to_many :senders, class_name: 'Space', inverse_of: :sent_messages
   has_and_belongs_to_many :receivers, class_name: 'Space', inverse_of: :received_messages
 
