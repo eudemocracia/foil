@@ -2,7 +2,7 @@ class Community
   include Mongoid::Document
   field :name
   field :domain
-  field :type
+  field :type, type: Symbol, default: :foreign
 
   has_many :spaces
 
