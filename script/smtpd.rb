@@ -20,7 +20,7 @@ loop do
       when /^MAIL FROM:<(.*)>$/i
         if state == :session
           mail = IncomingMail.new
-          mail.reverse_path = $1
+          mail.reverse_path << $1
           state = :transaction_1
           client.puts "250 OK"
         else
@@ -28,12 +28,9 @@ loop do
         end
 
       when /^RCPT TO:<(.*)>$/i
-        if state == :transaction_1
-          mail.forward_path = $1
-          state = :transaction_2
-          client.puts "250 OK"
-        elsif state == :transaction_2
+        if state == :transaction_1 || state == :transaction_2
           mail.forward_path << $1
+          state = :transaction_2
           client.puts "250 OK"
         else
           client.puts "503 Bad sequence of commands"

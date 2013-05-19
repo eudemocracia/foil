@@ -1,12 +1,6 @@
 class IncomingMail
   include Mongoid::Document
-  field :reverse_path
-  field :forward_path
-  field :data
-
-  after_initialize :init
-
-  def init
-    self.data ||= String.new
-  end
+  field :reverse_path, type: Array, default: Array.new
+  field :forward_path, type: Array, default: Array.new
+  field :data, default: String.new
 end
