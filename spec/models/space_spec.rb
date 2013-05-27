@@ -6,7 +6,7 @@ describe Space do
     @bob = Factory(:space, name: 'Bob', domain: 'examble.org', path: 'bob')
   end
 
-  it 'sends a message'
+  it 'posts JSON as message'
   it 'receives a message'
   it 'rejects an anonymous message'
 end
